@@ -1,0 +1,50 @@
+# Render blueprint. Create the service with:
+#   Render dashboard -> New -> Blueprint -> point at this repo
+#
+# DATABASE_URL comes from Neon, not from Render — paste the pooled connection
+# string from the Neon console, including ?sslmode=require
+services:
+  - type: web
+    name: kiriinya-portfolio-api
+    runtime: python
+    region: frankfurt          # pick the region closest to Neon's
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    # Migrations run at boot so a fresh deploy is always schema-current.
+    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: ENVIRONMENT
+        value: production
+      - key: SECRET_KEY
+        generateValue: true    # Render generates and stores this once
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: COOKIE_SAMESITE
+        value: none            # frontend on Vercel, API on Render
+      - key: STORAGE_BACKEND
+        value: r2
+      # --- set these in the Render dashboard, never in this file ---
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_NAME
+        sync: false
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        sync: false
+      - key: R2_PUBLIC_BASE_URL
+        sync: false

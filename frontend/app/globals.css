@@ -1,0 +1,472 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens — see DESIGN.md
+   Light is the base definition; dark overrides only the values that change.
+   ========================================================================== */
+
+@theme {
+  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-newsreader), ui-serif, Georgia, serif;
+  --font-mono: var(--font-mono-code), ui-monospace, "SF Mono", monospace;
+
+  /* Fixed type ramp — no arbitrary sizes anywhere in the app. */
+  --text-2xs: 0.6875rem;   /* 11 */
+  --text-xs: 0.75rem;      /* 12 */
+  --text-sm: 0.875rem;     /* 14 */
+  --text-base: 1rem;       /* 16 */
+  --text-md: 1.125rem;     /* 18 */
+  --text-lg: 1.3125rem;    /* 21 */
+  --text-xl: 1.6875rem;    /* 27 */
+  --text-2xl: 2.25rem;     /* 36 */
+  --text-3xl: 3rem;        /* 48 */
+  --text-4xl: 4rem;        /* 64 */
+  --text-5xl: 5.25rem;     /* 84 */
+
+  --radius-hair: 2px;
+  --radius-tile: 6px;
+  --radius-chip: 999px;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: light;
+
+  /* ------------------------------------------------------------------
+     Pattern palette — taken from the reference artwork.
+     These are pigments, not interface colours: they stay identical in
+     both themes because they only ever appear inside the SVG bandwork,
+     where black outlines carry the contrast. Never use them for text.
+     ------------------------------------------------------------------ */
+  --pat-gold: #f5b426;
+  --pat-amber: #f59b1c;
+  --pat-orange: #ef7a22;
+  --pat-red: #d62027;
+  --pat-green: #0f9b4a;
+  --pat-cyan: #29a8e0;
+  --pat-royal: #2b5fbf;
+  --pat-purple: #8b3a9e;
+  --pat-ink: #0a0a0a;
+
+  --bg: #faf7f2;
+  --bg-raised: #f2ece2;
+  --surface: #ffffff;
+  --text: #16141a;
+  --text-strong: #08070a;
+  --muted: #6b645f;
+  --line: #e0d8cc;
+  --line-strong: #c9bfae;
+
+  /* Interface accents. Deeper than the pigments above so they stay legible
+     as text and borders on the off-white ground. */
+  --gold: #b87710;
+  --gold-soft: #fbeacb;
+  --clay: #c9501c;
+  --indigo: #1f6ea8;
+  --palm: #0d7a3c;
+  --plum: #6e2f85;
+  --ember: #c01f26;
+
+  --on-accent: #ffffff;
+  --shadow-tile: 0 1px 2px rgb(22 20 26 / 0.05);
+  --shadow-lift: 0 8px 24px -12px rgb(22 20 26 / 0.22);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: #0b0a0d;
+    --bg-raised: #121016;
+    --surface: #15131a;
+    --text: #f4f0e9;
+    --text-strong: #ffffff;
+    --muted: #9b938e;
+    --line: #262230;
+    --line-strong: #3a3446;
+
+    --gold: #f5b426;
+    --gold-soft: #43300c;
+    --clay: #f07c22;
+    --indigo: #4cb4ea;
+    --palm: #23b45f;
+    --plum: #b06fd0;
+    --ember: #ef4a4a;
+
+    --on-accent: #0b0a0d;
+    --shadow-tile: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-lift: 0 12px 32px -16px rgb(0 0 0 / 0.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0b0a0d;
+  --bg-raised: #121016;
+  --surface: #15131a;
+  --text: #f4f0e9;
+  --text-strong: #ffffff;
+  --muted: #9b938e;
+  --line: #262230;
+  --line-strong: #3a3446;
+
+  --gold: #f5b426;
+  --gold-soft: #43300c;
+  --clay: #f07c22;
+  --indigo: #4cb4ea;
+  --palm: #23b45f;
+  --plum: #b06fd0;
+  --ember: #ef4a4a;
+
+  --on-accent: #0b0a0d;
+  --shadow-tile: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-lift: 0 12px 32px -16px rgb(0 0 0 / 0.7);
+}
+
+/* Expose the tokens to Tailwind utilities (bg-bg, text-muted, border-line…) */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-text-strong: var(--text-strong);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-clay: var(--clay);
+  --color-indigo: var(--indigo);
+  --color-palm: var(--palm);
+  --color-plum: var(--plum);
+  --color-ember: var(--ember);
+  --color-on-accent: var(--on-accent);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Nothing should ever scroll sideways (§43). */
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--on-accent);
+}
+
+/* One focus treatment everywhere, always visible (§32). */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -100px;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--surface);
+  color: var(--text-strong);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-tile);
+  transition: top 0.15s var(--ease-out-soft);
+}
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+/* ==========================================================================
+   Layout primitives
+   ========================================================================== */
+
+.shell {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 768px) {
+  .shell { padding-inline: 2rem; }
+}
+@media (min-width: 1280px) {
+  .shell { padding-inline: 2.5rem; }
+}
+
+.shell-narrow {
+  width: 100%;
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 768px) {
+  .shell-narrow { padding-inline: 2rem; }
+}
+
+.section {
+  padding-block: 4.5rem;
+}
+@media (min-width: 768px) {
+  .section { padding-block: 6.5rem; }
+}
+
+/* ==========================================================================
+   The woven data strip — the one repeated decorative element (DESIGN.md)
+   ========================================================================== */
+
+/* ==========================================================================
+   Skills marquee (§12) — pauses on hover, stops under reduced motion
+   ========================================================================== */
+
+@keyframes marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-left var(--marquee-duration, 60s) linear infinite;
+  will-change: transform;
+}
+.marquee--reverse { animation-direction: reverse; }
+.marquee-viewport:hover .marquee,
+.marquee-viewport:focus-within .marquee {
+  animation-play-state: paused;
+}
+
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* ==========================================================================
+   Hero weave reveal — the single orchestrated motion moment
+   ========================================================================== */
+
+@keyframes band-in {
+  from { opacity: 0; transform: translateY(10px) scaleY(0.86); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Applied to the inner group only — the outer group's transform attribute
+   carries the band's position and must not be overridden. */
+.band-reveal .band-piece {
+  opacity: 0;
+  animation: band-in 0.62s var(--ease-out-soft) forwards;
+}
+
+@keyframes fade-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+.rise { animation: fade-rise 0.5s var(--ease-out-soft) both; }
+
+/* ==========================================================================
+   Long-form article typography (§18, §52)
+   Serif, 68ch, generous leading. No pattern comes near this.
+   ========================================================================== */
+
+.prose {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: 1.75;
+  color: var(--text);
+  max-width: 68ch;
+}
+
+.prose > * + * { margin-top: 1.35em; }
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  margin-top: 2.6em;
+  margin-bottom: 0.2em;
+  scroll-margin-top: 6rem;
+}
+.prose h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  margin-top: 2em;
+  margin-bottom: 0.1em;
+  scroll-margin-top: 6rem;
+}
+
+.prose a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color 0.15s var(--ease-out-soft);
+}
+.prose a:hover { color: var(--clay); }
+
+.prose strong { font-weight: 650; color: var(--text-strong); }
+
+.prose ul, .prose ol { padding-left: 1.3em; }
+.prose ul { list-style: none; }
+.prose ul > li { position: relative; padding-left: 0.35em; }
+.prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: -0.85em;
+  top: 0.72em;
+  width: 10px;
+  height: 3px;
+  background: var(--gold);
+}
+.prose ol { list-style: decimal; }
+.prose li + li { margin-top: 0.5em; }
+
+.prose blockquote {
+  border-left: 3px solid var(--clay);
+  padding-left: 1.15em;
+  margin-left: 0;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.prose hr {
+  border: 0;
+  height: 3px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--gold) 0 12px, var(--clay) 12px 20px, transparent 20px 44px
+  );
+  opacity: 0.6;
+  margin-block: 2.5em;
+}
+
+.prose figure { margin-block: 2em; }
+.prose figure img { border-radius: var(--radius-hair); width: 100%; height: auto; }
+.prose figcaption {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--muted);
+  margin-top: 0.7em;
+}
+.prose img { border-radius: var(--radius-hair); }
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+}
+.prose :where(th, td) {
+  border: 1px solid var(--line);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+}
+.prose th { background: var(--bg-raised); font-weight: 600; }
+
+/* Tables and code may exceed the column, but each scrolls inside itself. */
+.prose-scroll { overflow-x: auto; }
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.855em;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-hair);
+  padding: 0.12em 0.36em;
+}
+
+.prose pre {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-tile);
+  padding: 1.1rem 1.15rem;
+  overflow-x: auto;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* highlight.js palette, mapped onto the site tokens so code never
+   introduces a colour the design system does not already use. */
+.hljs-comment, .hljs-quote { color: var(--muted); font-style: italic; }
+.hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-type { color: var(--plum); }
+.hljs-string, .hljs-doctag, .hljs-regexp { color: var(--palm); }
+.hljs-number, .hljs-symbol, .hljs-bullet { color: var(--clay); }
+.hljs-title, .hljs-name, .hljs-section, .hljs-built_in { color: var(--gold); }
+.hljs-attr, .hljs-attribute, .hljs-variable, .hljs-template-variable { color: var(--indigo); }
+.hljs-deletion { color: var(--ember); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 600; }
+
+/* ==========================================================================
+   Editor surface (admin) — shares the article styles, plus editing affordances
+   ========================================================================== */
+
+.ProseMirror { outline: none; min-height: 24rem; }
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--muted);
+}
+.ProseMirror table { table-layout: fixed; width: 100%; }
+.ProseMirror .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--gold) 18%, transparent);
+  pointer-events: none;
+}
+.ProseMirror ul[data-type="taskList"] { list-style: none; padding-left: 0.25rem; }
+.ProseMirror ul[data-type="taskList"] li { display: flex; gap: 0.55rem; }
+.ProseMirror ul[data-type="taskList"] li::before { display: none; }
+.ProseMirror img.ProseMirror-selectednode { outline: 2px solid var(--gold); }
+
+/* ==========================================================================
+   Reduced motion (§34, §56)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee { animation: none; transform: none; }
+  .band-reveal .band-piece { opacity: 1; }
+}
