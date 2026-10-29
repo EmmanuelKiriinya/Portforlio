@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { resumeHref } from "@/lib/utils";
+import { resumeHref, dateRange } from "@/lib/utils";
 import { Hero } from "@/components/home/Hero";
 import { SkillsMarquee } from "@/components/home/SkillsMarquee";
 import { Testimonials } from "@/components/home/Testimonials";
@@ -29,7 +29,7 @@ export default async function HomePage() {
 
   const {
     profile, settings, social_links, skills, skill_categories,
-    featured_projects, featured_posts, featured_certifications, testimonials,
+    featured_projects, featured_posts, featured_certifications, testimonials, experience,
   } = data;
 
   const resume = resumeHref(settings?.resume_url ?? null, settings?.resume_type ?? "drive");
@@ -45,7 +45,7 @@ export default async function HomePage() {
 
       {/* ---------------------------------------------------------- about */}
       {profile.bio || profile.expertise.length > 0 ? (
-        <section className="shell section" aria-labelledby="about-heading">
+        <section id="about" className="shell section" aria-labelledby="about-heading">
           <SectionHeading
             id="about-heading"
             title={profile.about_heading ?? "About"}
@@ -101,6 +101,49 @@ export default async function HomePage() {
         </section>
       ) : null}
 
+      {/* ----------------------------------------------------- experience */}
+      {experience.length > 0 ? (
+        <section id="experience" className="shell section" aria-labelledby="experience-heading">
+          <SectionHeading
+            id="experience-heading"
+            title="Experience"
+            lead="Where I have worked and what the work actually produced."
+            action={
+              <Link
+                href="/experience"
+                className="text-sm text-[var(--muted)] underline decoration-[var(--line-strong)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
+              >
+                Full history
+              </Link>
+            }
+          />
+          <ol className="border-t border-[var(--line)]">
+            {experience.slice(0, 4).map((role) => (
+              <li
+                key={role.id}
+                className="grid gap-2 border-b border-[var(--line)] py-7 md:grid-cols-[13rem_1fr] md:gap-10"
+              >
+                <p className="text-sm text-[var(--muted)]">
+                  {dateRange(role.start_date, role.end_date, role.current)}
+                </p>
+                <div>
+                  <h3 className="text-[length:var(--text-lg)] leading-snug">{role.title}</h3>
+                  <p className="mt-1 text-[var(--muted)]">
+                    {role.organization}
+                    {role.employment_type ? ` · ${role.employment_type}` : ""}
+                  </p>
+                  {role.description ? (
+                    <p className="mt-3 max-w-2xl leading-relaxed text-[var(--muted)]">
+                      {role.description}
+                    </p>
+                  ) : null}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
       {/* --------------------------------------------------------- skills */}
       {skills.length > 0 ? (
         <section className="shell section" aria-labelledby="skills-heading">
@@ -114,7 +157,7 @@ export default async function HomePage() {
       ) : null}
 
       {/* ------------------------------------------------------- projects */}
-      <section className="shell section" aria-labelledby="projects-heading">
+      <section id="projects" className="shell section" aria-labelledby="projects-heading">
         <SectionHeading
           id="projects-heading"
           title="Selected work"
@@ -145,7 +188,7 @@ export default async function HomePage() {
 
       {/* ----------------------------------------------------------- blog */}
       {featured_posts.length > 0 ? (
-        <section className="shell section" aria-labelledby="writing-heading">
+        <section id="writing" className="shell section" aria-labelledby="writing-heading">
           <SectionHeading
             id="writing-heading"
             title="Writing"
@@ -177,7 +220,7 @@ export default async function HomePage() {
 
       {/* -------------------------------------------------- certifications */}
       {featured_certifications.length > 0 ? (
-        <section className="shell section" aria-labelledby="certs-heading">
+        <section id="certifications" className="shell section" aria-labelledby="certs-heading">
           <SectionHeading
             id="certs-heading"
             title="Certifications"
@@ -199,7 +242,7 @@ export default async function HomePage() {
       ) : null}
 
       {/* -------------------------------------------------------- contact */}
-      <section className="shell section" aria-labelledby="contact-cta">
+      <section id="contact" className="shell section" aria-labelledby="contact-cta">
         <div className="relative overflow-hidden rounded-[var(--radius-tile)] border border-[var(--line)] bg-[var(--surface)] px-7 py-12 md:px-14 md:py-16">
           <div
             aria-hidden="true"

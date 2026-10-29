@@ -81,7 +81,7 @@ export function ProjectRow({ project, index }: { project: ProjectSummary; index:
         <div className="mt-7 flex flex-wrap items-center gap-3">
           <Link
             href={`/projects/${project.slug}`}
-            className="rounded-[var(--radius-hair)] border border-[var(--line-strong)] px-4 py-2 text-sm transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
+            className="rounded-[var(--radius-button)] border border-[var(--line-strong)] px-4 py-2 text-sm transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
           >
             Read the case study
           </Link>

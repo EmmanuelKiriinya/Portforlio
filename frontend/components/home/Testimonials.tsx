@@ -67,81 +67,77 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
       }}
       className="relative rounded-[var(--radius-tile)]"
     >
-      {/* Weight 4 of the weave: a decorative quotation mark. */}
-      <svg
-        width="52"
-        height="42"
-        viewBox="0 0 52 42"
-        aria-hidden="true"
-        className="mb-6 opacity-90"
-      >
-        <polygon points="0,42 12,0 22,0 12,42" fill="var(--gold)" />
-        <polygon points="16,42 28,0 38,0 28,42" fill="var(--clay)" opacity="0.8" />
-        <polygon points="32,42 44,0 52,0 42,42" fill="var(--plum)" opacity="0.6" />
-      </svg>
+      {/* Arrows flank the quote from md up; on narrow screens they would squeeze
+          the text, so they drop into the indicator row below instead. */}
+      <div className="flex items-center gap-6 lg:gap-10">
+        {count > 1 ? <StepButton dir="prev" onClick={() => { setPaused(true); go(index - 1); }} className="hidden md:flex" /> : null}
 
-      <div aria-live="polite" aria-atomic="true">
-        <blockquote key={current.id} className="rise">
-          <p className="max-w-3xl font-[family-name:var(--font-body)] text-[length:var(--text-lg)] leading-[1.65] text-[var(--text)] md:text-[length:var(--text-xl)] md:leading-[1.5]">
-            {current.content}
-          </p>
+        <div className="min-w-0 flex-1">
+          {/* Weight 4 of the weave: a decorative quotation mark. */}
+          <svg
+            width="52"
+            height="42"
+            viewBox="0 0 52 42"
+            aria-hidden="true"
+            className="mb-6 opacity-90"
+          >
+            <polygon points="0,42 12,0 22,0 12,42" fill="var(--gold)" />
+            <polygon points="16,42 28,0 38,0 28,42" fill="var(--clay)" opacity="0.8" />
+            <polygon points="32,42 44,0 52,0 42,42" fill="var(--plum)" opacity="0.6" />
+          </svg>
 
-          <footer className="mt-8 flex items-center gap-4 border-t border-[var(--line)] pt-6">
-            <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-[var(--bg-raised)]">
-              <SmartImage
-                src={imageUrl(current.profile_image)}
-                alt={altText(current.profile_image, current.name)}
-                fill
-                sizes="48px"
-                className="object-cover"
-                fallback={
-                  <span className="flex h-full w-full items-center justify-center text-sm font-semibold text-[var(--muted)]">
-                    {initials(current.name)}
-                  </span>
-                }
-              />
-            </span>
-
-            <div className="min-w-0">
-              <p className="font-medium text-[var(--text-strong)]">{current.name}</p>
-              <p className="text-sm text-[var(--muted)]">
-                {[current.title, current.organization].filter(Boolean).join(", ")}
+          <div aria-live="polite" aria-atomic="true">
+            <blockquote key={current.id} className="rise">
+              <p className="max-w-3xl font-[family-name:var(--font-body)] text-[length:var(--text-lg)] leading-[1.65] text-[var(--text)] md:text-[length:var(--text-xl)] md:leading-[1.5]">
+                {current.content}
               </p>
-            </div>
 
-            {current.linkedin_url ? (
-              <a
-                href={current.linkedin_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-auto shrink-0 rounded-[var(--radius-hair)] border border-[var(--line-strong)] px-3.5 py-2 text-sm transition-colors hover:border-[var(--indigo)] hover:text-[var(--indigo)]"
-              >
-                LinkedIn
-                <span className="sr-only"> profile for {current.name}</span>
-              </a>
-            ) : null}
-          </footer>
-        </blockquote>
+              <footer className="mt-8 flex items-center gap-4 border-t border-[var(--line)] pt-6">
+                <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-[var(--bg-raised)]">
+                  <SmartImage
+                    src={imageUrl(current.profile_image)}
+                    alt={altText(current.profile_image, current.name)}
+                    fill
+                    sizes="48px"
+                    className="object-cover"
+                    fallback={
+                      <span className="flex h-full w-full items-center justify-center text-sm font-semibold text-[var(--muted)]">
+                        {initials(current.name)}
+                      </span>
+                    }
+                  />
+                </span>
+
+                <div className="min-w-0">
+                  <p className="font-medium text-[var(--text-strong)]">{current.name}</p>
+                  <p className="text-sm text-[var(--muted)]">
+                    {[current.title, current.organization].filter(Boolean).join(", ")}
+                  </p>
+                </div>
+
+                {current.linkedin_url ? (
+                  <a
+                    href={current.linkedin_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-auto shrink-0 rounded-[var(--radius-button)] border border-[var(--line-strong)] px-3.5 py-2 text-sm transition-colors hover:border-[var(--indigo)] hover:text-[var(--indigo)]"
+                  >
+                    LinkedIn
+                    <span className="sr-only"> profile for {current.name}</span>
+                  </a>
+                ) : null}
+              </footer>
+            </blockquote>
+          </div>
+        </div>
+
+        {count > 1 ? <StepButton dir="next" onClick={() => { setPaused(true); go(index + 1); }} className="hidden md:flex" /> : null}
       </div>
 
       {count > 1 ? (
-        <div className="mt-8 flex items-center gap-4">
-          <button
-            type="button"
-            onClick={() => { setPaused(true); go(index - 1); }}
-            className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-hair)] border border-[var(--line)] transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
-          >
-            <ArrowLeftIcon size={15} />
-            <span className="sr-only">Previous testimonial</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => { setPaused(true); go(index + 1); }}
-            className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-hair)] border border-[var(--line)] transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
-          >
-            <ArrowRightIcon size={15} />
-            <span className="sr-only">Next testimonial</span>
-          </button>
+        <div className="mt-8 flex items-center gap-4 md:px-16 lg:px-20">
+          <StepButton dir="prev" onClick={() => { setPaused(true); go(index - 1); }} className="flex md:hidden" />
+          <StepButton dir="next" onClick={() => { setPaused(true); go(index + 1); }} className="flex md:hidden" />
 
           <ol className="flex items-center gap-2">
             {testimonials.map((item, i) => (
@@ -166,5 +162,20 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
         </div>
       ) : null}
     </div>
+  );
+}
+
+function StepButton({
+  dir, onClick, className,
+}: { dir: "prev" | "next"; onClick: () => void; className: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-button)] border border-[var(--line)] transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)] ${className}`}
+    >
+      {dir === "prev" ? <ArrowLeftIcon size={15} /> : <ArrowRightIcon size={15} />}
+      <span className="sr-only">{dir === "prev" ? "Previous testimonial" : "Next testimonial"}</span>
+    </button>
   );
 }

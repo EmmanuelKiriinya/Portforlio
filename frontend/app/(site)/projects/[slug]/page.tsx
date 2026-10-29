@@ -116,7 +116,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 href={project.github_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-[var(--radius-hair)] border border-[var(--gold)] bg-[var(--gold)] px-5 py-2.5 text-sm font-medium text-[var(--on-accent)] transition-colors hover:border-[var(--clay)] hover:bg-[var(--clay)]"
+                className="inline-flex items-center gap-2 rounded-[var(--radius-button)] border border-[var(--gold)] bg-[var(--gold)] px-5 py-2.5 text-sm font-medium text-[var(--on-accent)] transition-colors hover:border-[var(--clay)] hover:bg-[var(--clay)]"
               >
                 View on GitHub
                 <ExternalLinkIcon size={14} />
@@ -127,7 +127,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 href={project.live_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-[var(--radius-hair)] border border-[var(--line-strong)] px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
+                className="inline-flex items-center gap-2 rounded-[var(--radius-button)] border border-[var(--line-strong)] px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
               >
                 Live demo
                 <ExternalLinkIcon size={14} />

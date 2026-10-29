@@ -44,7 +44,7 @@ export function ThemeToggle() {
       onClick={() => choose(next)}
       title={label}
       aria-label={`${label}. Switch to ${next === "system" ? "system" : next} theme.`}
-      className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-hair)] border border-[var(--line)] text-[var(--muted)] transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
+      className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-button)] border border-[var(--line)] text-[var(--muted)] transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
     >
       {/* Show the neutral system glyph until mounted, so SSR and client agree. */}
       {!mounted || theme === "system" ? (

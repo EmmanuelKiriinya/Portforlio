@@ -16,7 +16,7 @@ from typing import Any, Callable, Optional, Sequence, Type
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import inspect, select
 from sqlalchemy.orm import Session
 
 from app.api.deps import require_admin
@@ -43,6 +43,10 @@ def build_crud_router(
 ) -> APIRouter:
     router = APIRouter(dependencies=[Depends(require_admin)])
     ordering = order_by or (model.id,)
+    # Plain columns only. Relationships (Experience.achievements) arrive as raw
+    # dicts and must be built into rows by the on_create / on_update hook —
+    # assigning the dicts directly makes SQLAlchemy raise.
+    columns = set(inspect(model).columns.keys())
 
     def _get_or_404(db: Session, item_id: int):
         obj = db.get(model, item_id)
@@ -64,7 +68,7 @@ def build_crud_router(
     @router.post("", response_model=out_schema, status_code=status.HTTP_201_CREATED)
     def create_item(payload: create_schema, db: Session = Depends(get_db)):  # type: ignore[valid-type]
         data = payload.model_dump(exclude_unset=True)
-        obj = model(**{k: v for k, v in data.items() if hasattr(model, k)})
+        obj = model(**{k: v for k, v in data.items() if k in columns})
         db.add(obj)
         db.flush()
         if on_create:
@@ -77,7 +81,7 @@ def build_crud_router(
     def update_item(item_id: int, payload: update_schema, db: Session = Depends(get_db)):  # type: ignore[valid-type]
         obj = _get_or_404(db, item_id)
         for key, value in payload.model_dump(exclude_unset=True).items():
-            if hasattr(model, key):
+            if key in columns:
                 setattr(obj, key, value)
         if on_update:
             on_update(db, obj, payload)

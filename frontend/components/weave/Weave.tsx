@@ -14,6 +14,8 @@
  * interface colours and are identical in both themes.
  */
 
+import { isValidElement, type ReactElement, type ReactNode } from "react";
+
 const PIGMENTS = [
   "var(--pat-gold)",
   "var(--pat-amber)",
@@ -515,5 +517,71 @@ export function WeaveMark({ size = 28, className = "" }: { size?: number; classN
         strokeLinecap="round"
       />
     </svg>
+  );
+}
+
+/* ------------------------------------------------------------ letterform */
+
+/**
+ * The pigments again, as literal values. A cloth used as a CSS image is its own
+ * document and cannot see the page's --pat-* tokens, so it declares them on its
+ * root. Keep in step with globals.css.
+ */
+const PIGMENT_VALUES =
+  "--pat-gold:#f5b426;--pat-amber:#f59b1c;--pat-orange:#ef7a22;--pat-red:#d62027;" +
+  "--pat-green:#0f9b4a;--pat-cyan:#29a8e0;--pat-royal:#2b5fbf;--pat-purple:#8b3a9e;" +
+  "--pat-ink:#0a0a0a";
+
+/** SVG attributes whose React names are already their real, camelCase names. */
+const KEEP_CASE = new Set(["viewBox", "preserveAspectRatio"]);
+
+const escapeXml = (value: string) =>
+  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/**
+ * Serialise the cloth to SVG markup. Server Components may not import
+ * react-dom/server, and the weave is only plain SVG elements and hook-free
+ * function components, so walking the tree directly is enough.
+ */
+function toMarkup(node: ReactNode): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (Array.isArray(node)) return node.map(toMarkup).join("");
+  if (typeof node === "string" || typeof node === "number") return escapeXml(String(node));
+  if (!isValidElement(node)) return "";
+
+  const { type, props } = node as ReactElement<Record<string, unknown>>;
+  if (typeof type === "function") return toMarkup((type as (p: unknown) => ReactNode)(props));
+  if (typeof type !== "string") return toMarkup(props.children as ReactNode);
+
+  let attrs = "";
+  for (const [key, value] of Object.entries(props)) {
+    if (key === "children" || key === "style" || value == null || value === false) continue;
+    const name = key === "className" ? "class"
+      : KEEP_CASE.has(key) ? key
+      : key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+    attrs += ` ${name}="${escapeXml(String(value))}"`;
+  }
+  return `<${type}${attrs}>${toMarkup(props.children as ReactNode)}</${type}>`;
+}
+
+/** A small cloth as a CSS `url()`, sized for filling a single letter. */
+function weaveImage(seed: number) {
+  const svg = toMarkup(<Weave seed={seed} bandCount={3} height={150} />).replace(
+    "<svg",
+    `<svg xmlns="http://www.w3.org/2000/svg" style="${PIGMENT_VALUES}"`,
+  );
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
+/**
+ * A letter cut from the cloth — the hero initial. The glyph stays real text,
+ * so kerning, selection and screen readers are untouched; the weave shows
+ * through it via `background-clip: text` (see .weave-letter in globals.css).
+ */
+export function WeaveLetter({ children, seed = 11 }: { children: ReactNode; seed?: number }) {
+  return (
+    <span className="weave-letter" style={{ backgroundImage: weaveImage(seed) }}>
+      {children}
+    </span>
   );
 }

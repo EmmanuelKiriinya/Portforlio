@@ -26,6 +26,7 @@
   --radius-hair: 2px;
   --radius-tile: 6px;
   --radius-chip: 999px;
+  --radius-button: 999px;
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -305,6 +306,21 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text);
   max-width: 68ch;
 }
+
+/* The hero initial, filled with the weave (WeaveLetter). Where text clipping is
+   unsupported the letter simply keeps its ordinary colour. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .weave-letter {
+    background-size: cover;
+    background-position: center;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Homepage sections are nav targets; clear the sticky header when jumped to. */
+section[id] { scroll-margin-top: 4rem; }
 
 .prose > * + * { margin-top: 1.35em; }
 

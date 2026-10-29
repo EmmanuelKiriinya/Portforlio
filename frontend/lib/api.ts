@@ -117,6 +117,35 @@ export const api = {
 
 /* ----------------------------------------------------------------- admin */
 
+/** Auth endpoints that must never trigger a refresh-and-retry themselves. */
+const NO_REFRESH = new Set(["/auth/login", "/auth/refresh", "/auth/logout"]);
+
+let refreshing: Promise<boolean> | null = null;
+
+/**
+ * Trade the refresh cookie for a new access cookie. The access token lives an
+ * hour and the refresh token two weeks, so without this every admin request
+ * starts failing an hour after sign-in. Concurrent 401s share one attempt.
+ */
+function refreshSession(): Promise<boolean> {
+  refreshing ??= fetch(`${API_URL}/auth/refresh`, {
+    method: "POST",
+    credentials: "include",
+    cache: "no-store",
+  })
+    .then((res) => res.ok)
+    .catch(() => false)
+    .finally(() => { refreshing = null; });
+  return refreshing;
+}
+
+/** Send once; on a 401, refresh the session and send again. */
+async function withRefresh(path: string, send: () => Promise<Response>): Promise<Response> {
+  const res = await send();
+  if (res.status !== 401 || NO_REFRESH.has(path)) return res;
+  return (await refreshSession()) ? send() : res;
+}
+
 /**
  * Authenticated request from the browser. Credentials are the HTTP-only
  * cookies set by /auth/login, so no token is ever stored in JS.
@@ -130,13 +159,15 @@ export async function adminFetch<T>(
   if (json !== undefined) headers.set("Content-Type", "application/json");
   headers.set("Accept", "application/json");
 
-  const res = await fetch(`${API_URL}${path}`, {
-    ...rest,
-    headers,
-    credentials: "include",
-    cache: "no-store",
-    body: json !== undefined ? JSON.stringify(json) : rest.body,
-  });
+  const res = await withRefresh(path, () =>
+    fetch(`${API_URL}${path}`, {
+      ...rest,
+      headers,
+      credentials: "include",
+      cache: "no-store",
+      body: json !== undefined ? JSON.stringify(json) : rest.body,
+    }),
+  );
 
   if (res.status === 204) return undefined as T;
 
@@ -208,9 +239,10 @@ export const adminApi = {
   uploadMedia: async (file: File, category = "general", altText?: string) => {
     const form = new FormData();
     form.append("file", file);
-    const res = await fetch(
-      `${API_URL}/admin/media${qs({ category, alt_text: altText })}`,
-      { method: "POST", body: form, credentials: "include" },
+    const res = await withRefresh("/admin/media", () =>
+      fetch(`${API_URL}/admin/media${qs({ category, alt_text: altText })}`, {
+        method: "POST", body: form, credentials: "include",
+      }),
     );
     if (!res.ok) {
       throw new ApiError(

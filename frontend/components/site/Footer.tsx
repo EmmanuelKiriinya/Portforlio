@@ -71,7 +71,6 @@ export function Footer({
         <p>
           © {new Date().getFullYear()} {name}
         </p>
-        <p>Built with Next.js and FastAPI.</p>
       </div>
     </footer>
   );

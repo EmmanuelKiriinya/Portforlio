@@ -76,7 +76,7 @@ export function CertificationTile({ certification }: { certification: Certificat
             href={certification.verification_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-[var(--radius-hair)] border border-[var(--line-strong)] px-3.5 py-1.5 text-sm transition-colors hover:border-[var(--palm)] hover:text-[var(--palm)]"
+            className="inline-flex items-center gap-1.5 rounded-[var(--radius-button)] border border-[var(--line-strong)] px-3.5 py-1.5 text-sm transition-colors hover:border-[var(--palm)] hover:text-[var(--palm)]"
           >
             Verify credential
             <ExternalLinkIcon size={13} />
@@ -87,7 +87,7 @@ export function CertificationTile({ certification }: { certification: Certificat
             href={certification.certificate_image.public_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-[var(--radius-hair)] border border-transparent px-2 py-1.5 text-sm text-[var(--muted)] underline decoration-[var(--line-strong)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
+            className="rounded-[var(--radius-button)] border border-transparent px-2 py-1.5 text-sm text-[var(--muted)] underline decoration-[var(--line-strong)] underline-offset-4 transition-colors hover:text-[var(--gold)]"
           >
             View certificate
           </a>

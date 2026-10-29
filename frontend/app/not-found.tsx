@@ -13,13 +13,13 @@ export default function NotFound() {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             href="/"
-            className="rounded-[var(--radius-hair)] border border-[var(--gold)] bg-[var(--gold)] px-5 py-2.5 text-sm font-medium text-[var(--on-accent)] transition-colors hover:border-[var(--clay)] hover:bg-[var(--clay)]"
+            className="rounded-[var(--radius-button)] border border-[var(--gold)] bg-[var(--gold)] px-5 py-2.5 text-sm font-medium text-[var(--on-accent)] transition-colors hover:border-[var(--clay)] hover:bg-[var(--clay)]"
           >
             Go to the homepage
           </Link>
           <Link
             href="/blog"
-            className="rounded-[var(--radius-hair)] border border-[var(--line-strong)] px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
+            className="rounded-[var(--radius-button)] border border-[var(--line-strong)] px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
           >
             Browse the blog
           </Link>

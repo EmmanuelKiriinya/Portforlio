@@ -174,7 +174,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={state === "sending"}
-        className="inline-flex items-center justify-center rounded-[var(--radius-hair)] border border-[var(--gold)] bg-[var(--gold)] px-6 py-3 text-sm font-medium text-[var(--on-accent)] transition-colors hover:border-[var(--clay)] hover:bg-[var(--clay)] disabled:opacity-60"
+        className="inline-flex items-center justify-center rounded-[var(--radius-button)] border border-[var(--gold)] bg-[var(--gold)] px-6 py-3 text-sm font-medium text-[var(--on-accent)] transition-colors hover:border-[var(--clay)] hover:bg-[var(--clay)] disabled:opacity-60"
       >
         {state === "sending" ? "Sending…" : "Send message"}
       </button>

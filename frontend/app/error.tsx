@@ -19,7 +19,7 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="mt-8 rounded-[var(--radius-hair)] border border-[var(--gold)] bg-[var(--gold)] px-5 py-2.5 text-sm font-medium text-[var(--on-accent)] transition-colors hover:border-[var(--clay)] hover:bg-[var(--clay)]"
+          className="mt-8 rounded-[var(--radius-button)] border border-[var(--gold)] bg-[var(--gold)] px-5 py-2.5 text-sm font-medium text-[var(--on-accent)] transition-colors hover:border-[var(--clay)] hover:bg-[var(--clay)]"
         >
           Try again
         </button>

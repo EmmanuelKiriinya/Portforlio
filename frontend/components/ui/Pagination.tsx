@@ -30,7 +30,7 @@ export function Pagination({ page, pages }: { page: number; pages: number }) {
         <Link
           href={hrefFor(page - 1)}
           rel="prev"
-          className="rounded-[var(--radius-hair)] border border-[var(--line-strong)] px-4 py-2 text-sm transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
+          className="rounded-[var(--radius-button)] border border-[var(--line-strong)] px-4 py-2 text-sm transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
         >
           Previous
         </Link>
@@ -47,7 +47,7 @@ export function Pagination({ page, pages }: { page: number; pages: number }) {
               <Link
                 href={hrefFor(number)}
                 aria-current={number === page ? "page" : undefined}
-                className={`flex h-9 min-w-9 items-center justify-center rounded-[var(--radius-hair)] px-2 text-sm transition-colors ${
+                className={`flex h-9 min-w-9 items-center justify-center rounded-[var(--radius-button)] px-2 text-sm transition-colors ${
                   number === page
                     ? "bg-[var(--gold)] text-[var(--on-accent)]"
                     : "border border-[var(--line)] text-[var(--muted)] hover:border-[var(--gold)] hover:text-[var(--gold)]"
@@ -64,7 +64,7 @@ export function Pagination({ page, pages }: { page: number; pages: number }) {
         <Link
           href={hrefFor(page + 1)}
           rel="next"
-          className="rounded-[var(--radius-hair)] border border-[var(--line-strong)] px-4 py-2 text-sm transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
+          className="rounded-[var(--radius-button)] border border-[var(--line-strong)] px-4 py-2 text-sm transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]"
         >
           Next
         </Link>

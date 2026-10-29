@@ -17,7 +17,7 @@ const TONE: Record<ButtonTone, string> = {
 
 const BUTTON_BASE =
   "inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium " +
-  "rounded-[var(--radius-hair)] transition-colors duration-150 " +
+  "rounded-[var(--radius-button)] transition-colors duration-150 " +
   "disabled:opacity-50 disabled:pointer-events-none";
 
 export function ButtonLink({

@@ -73,7 +73,7 @@ export function SocialButtons({
             target="_blank"
             rel="noopener noreferrer"
             title={link.label}
-            className={`${box} flex items-center justify-center rounded-[var(--radius-tile)] border border-[var(--line)] text-[var(--muted)] transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]`}
+            className={`${box} flex items-center justify-center rounded-[var(--radius-button)] border border-[var(--line)] text-[var(--muted)] transition-colors hover:border-[var(--gold)] hover:text-[var(--gold)]`}
           >
             <Glyph link={link} size={glyph} />
             <span className="sr-only">{link.label}</span>
